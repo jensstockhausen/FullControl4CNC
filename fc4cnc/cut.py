@@ -17,10 +17,14 @@ class Cut():
 
         return self.gcode
 
+    def display(self):
+        fc.transform(self.steps, 'plot', fc.PlotControls(style='line'))
+
     def _cut(self):
 
         # start point
         self.steps.append(fc.Point(x=0, y=0, z=0))
+        self.steps.append(fc.Printer(print_speed=400))
         
         max_step_down = 1.2
 
@@ -36,7 +40,10 @@ class Cut():
         dir = 1
         for z in z_layers:
             
+            self.steps.append(fc.Printer(print_speed=200))
             self.steps.append(fc.Point(z=-z))
+            self.steps.append(fc.Printer(print_speed=400))
+
             if (1 == dir):
                 # fw
                 self.steps.append(fc.Point(x=self.length, y=0))

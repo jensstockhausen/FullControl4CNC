@@ -11,7 +11,7 @@ def cut(length: int, depth: int):
     gcode = c.gcode()
     print(gcode)
 
-    fc.transform(c.steps, 'plot', fc.PlotControls(style='line'))
+    c.display()
 
 @app.command()
 def plot():
