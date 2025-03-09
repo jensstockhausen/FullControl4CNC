@@ -1,9 +1,12 @@
 from fc4cnc import prefix, suffix, clean_gcode
 import fullcontrol as fc
+from fc4cnc.operation import Operation
+class Cut(Operation):
 
-class Cut():
+    def __init__(self, length: float, depth: float, step_down: float = 1.2, speed: int = 400, safe_height: float = 2):
+        Operation.__init__(self, speed = speed, safe_height = safe_height)
 
-    def __init__(self, length: int, depth: int):
+        self.step_down = step_down
         self.length = length
         self.depth = depth
         self.steps = []
@@ -24,14 +27,12 @@ class Cut():
 
         # start point
         self.steps.append(fc.Point(x=0, y=0, z=0))
-        self.steps.append(fc.Printer(print_speed=400))
-        
-        max_step_down = 1.2
-
+        self.steps.append(fc.Printer(print_speed=self.speed))
+    
         z = 0
         z_layers = []
         while (z < self.depth):
-            z += max_step_down
+            z += self.step_down
             if (z > self.depth):
                 z = self.depth
 
@@ -42,7 +43,7 @@ class Cut():
             
             self.steps.append(fc.Printer(print_speed=200))
             self.steps.append(fc.Point(z=-z))
-            self.steps.append(fc.Printer(print_speed=400))
+            self.steps.append(fc.Printer(print_speed=self.speed))
 
             if (1 == dir):
                 # fw
